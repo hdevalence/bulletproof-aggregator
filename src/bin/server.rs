@@ -18,10 +18,9 @@ fn main() {
                 hyper::service::service_fn(move |req: Request<Body>| {
                     req.into_body()
                         .concat2()
-                        .map(|chunk| chunk.iter().cloned().collect::<Vec<u8>>())
                         .map(|body| {
                             info!("got body: {:?}", body);
-                            let point: Result<Point, _> = serde_cbor::from_slice(&body);
+                            let point: Result<Point, _> = serde_cbor::from_slice(&body.as_ref());
                             match point {
                                 Ok(point) => {
                                     let sum = point.x + point.y;
